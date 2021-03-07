@@ -5,16 +5,6 @@ CELL = 20 * SIZE_FACTOR
 WIN_SIZE_X = 683 * SIZE_FACTOR
 WIN_SIZE_Y = 384 * SIZE_FACTOR
 TARGET_STEP = CELL
-DATA = [(0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-        (0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-        (0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-        (0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-        (0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-        (0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-        (0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-        (0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-        (0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-        (0, 0, 0, 0, 0, 0, 0, 0, 0, 0)]
 YELLOW = (255, 255, 0)
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
@@ -31,8 +21,6 @@ class Field():
         player_id - whose player is field,
         start_coord - from which point it will drawn
          """
-        self.player_id = player_id
-        self.data = DATA
         self.length = CELL * 10
         self.x = x
         self.y = y
@@ -64,10 +52,9 @@ class Field():
 
 class Player():
     """Class player"""
-    def __init__(self, am_i_player,):
-        self.am_i_player = am_i_player
+    def __init__(self):
         self.status = True
-        self.deck_alive = None
+        self.deck_alive = 20
         self.data = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -103,11 +90,20 @@ class Player():
             pass
 
 
+class Enemy(Player):
+    """Subclass for PC"""
+    def rand_set_ships(self):
+        pass
+
+    def attack_ai(self):
+        pass
+
+
 class Game():
     """This class uses to manage game events"""
-    def __init__(self, player, pc):
-        self.player = player
-        self.pc = pc
+    def __init__(self):
+        self.player = None
+        self.pc = None
         self.score = None
         self.winner = None
         self.main_menu = 0
@@ -136,6 +132,20 @@ class Game():
 
         def is_ship_dead():
             pass
+
+        def add_new_players():
+            pass
+
+
+class Ship():
+    """Ship"""
+    def __init__(self, name, count_deck, direction, x, y):
+        self.name = name
+        self.count_deck = int(count_deck)
+        self.direction = bool(direction)
+        self.x = int(x)
+        self.y = int(y)
+        self.status = 1
 
 
 
