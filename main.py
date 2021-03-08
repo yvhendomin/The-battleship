@@ -44,15 +44,13 @@ class Field():
             for j in range(0, 10):
                 self.x_cell = self.x + j * CELL
                 self.y_cell = self.y + i * CELL
-                pygame.draw.rect(win, self.color_cell[self.player.data[i][j]], (self.x_cell + 1, self.y_cell + 1, CELL - 0.5, CELL- 0.5))
-
-        """pygame.draw.rect(win, YELLOW, (self.x, self.y, TARGET_STEP, TARGET_STEP))"""
+                pygame.draw.rect(win, self.color_cell[self.player.data[i][j]],
+                                 (self.x_cell + 1, self.y_cell + 1, CELL - 0.5, CELL - 0.5))
 
         for i in range(self.x, self.x + self.length + TARGET_STEP, TARGET_STEP):
             pygame.draw.line(win, YELLOW_LINES, [i, self.y], [i, self.y + self.length], 1)
         for i in range(self.y, self.y + self.length + TARGET_STEP, TARGET_STEP):
             pygame.draw.line(win, YELLOW_LINES, [self.x, i], [self.x + self.length, i], 1)
-
 
         font = pygame.font.SysFont('arial', 22 * SIZE_FACTOR, False, False)
 
@@ -64,21 +62,35 @@ class Field():
             self.pos2 = self.serif2.get_rect(center=(self.x - CELL, self.y + CELL // 2 + i * CELL))
             win.blit(self.serif2, self.pos2)
 
+    def target(self):
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_LEFT] and TARGET_COORD[0] > 0:
+            TARGET_COORD[0] -= 1
+        elif keys[pygame.K_RIGHT] and TARGET_COORD[0] < 9:
+            TARGET_COORD[0] += 1
+        elif keys[pygame.K_DOWN] and TARGET_COORD[1] < 9:
+            TARGET_COORD[1] += 1
+        elif keys[pygame.K_UP] and TARGET_COORD[1] > 0:
+            TARGET_COORD[1] -= 1
+
+        pygame.draw.rect(win, YELLOW,(TARGET_COORD[0] * CELL + self.x,
+                                      TARGET_COORD[1] * CELL + self.y, TARGET_STEP, TARGET_STEP))
+
 
 class Player():
     """Class player"""
     def __init__(self):
         self.status = True
         self.deck_alive = 20
-        self.data = [[0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
-                     [0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
-                     [0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+        self.data = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                     [0, 0, 0, 0, 0, 0, 3, 3, 3, 0],
                      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                     [0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
-                     [0, 0, 0, 2, 0, 0, 0, 0, 0, 0],
-                     [0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
+                     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
         self.map = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -104,6 +116,8 @@ class Player():
         def check_ships():
             pass
 
+        def target():
+            pass
 
 class Enemy(Player):
     """Subclass for PC"""
@@ -154,14 +168,20 @@ class Game():
 
 class Ship():
     """Ship"""
-    def __init__(self, name, count_deck, direction, x, y):
+    def __init__(self, name, count_deck, direction, coord):
         self.name = name
         self.count_deck = int(count_deck)
         self.direction = bool(direction)
-        self.x = int(x)
-        self.y = int(y)
-        self.status = 1
+        self.coord = coord
+        self.status = 0
+        self.decks_coord = []
 
+        def fill_coord(self):
+            "Ship creates list with coordinates of each his deck"
+            if self.direction:
+                self.decks_coord[0] = self.coord
+                for i in range(1, self.count_deck):
+                    self.decks_coord[i] = [self.coord[i], self.coord[i] + 1]
 
 
 
@@ -171,33 +191,26 @@ win = pygame.display.set_mode((WIN_SIZE_X, WIN_SIZE_Y))
 pygame.display.set_caption("THE BATTLESHIP")
 
 john = Player()
+pc = Player()
 field1 = Field(john, 100, 100)
-
+field2 = Field(pc, 700, 100)
 
 
 run = True
 while run:
-    pygame.time.delay(100)
+    pygame.time.delay(120)
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
 
-    keys = pygame.key.get_pressed()
-    if keys[pygame.K_LEFT] and TARGET_COORD[0] > 0:
-        TARGET_COORD[0] -= 1
-    elif keys[pygame.K_RIGHT] and TARGET_COORD[0] < 10:
-        TARGET_COORD[0] += 1
-    elif keys[pygame.K_DOWN] and TARGET_COORD[1] < 10:
-        TARGET_COORD[1] += 1
-    elif keys[pygame.K_UP] and TARGET_COORD[1] > 0:
-        TARGET_COORD[1] -= 1
 
     field1.printf()
-    """win.fill((0, 0, 0))"""
-
-    """win.blit(text1, pos)"""
-
+    field2.printf()
+    field2.target()
+    print(TARGET_COORD)
     pygame.display.update()
+    win.fill((0, 0, 0))
+
 
 pygame.quit()
