@@ -5,10 +5,14 @@ CELL = 20 * SIZE_FACTOR
 WIN_SIZE_X = 683 * SIZE_FACTOR
 WIN_SIZE_Y = 384 * SIZE_FACTOR
 TARGET_STEP = CELL
-YELLOW = (255, 255, 0)
+YELLOW = (236, 222, 0)
+YELLOW_LINES = (255, 255, 0)
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
-BLUE = (0, 0, 255)
+BLUE = (14, 20, 120)
+GREEN = (16, 224, 13)
+RED = (173, 49, 3)
+BROWN = (76, 41, 13)
 X = CELL * 3
 Y = CELL * 4
 TARGET_COORD = [1, 1]
@@ -32,25 +36,26 @@ class Field():
         self.digits = ('1', '2', '3', '4', '5', '6', '7', '8', '9', '10')
         self.x_cell = None
         self.y_cell = None
-
+        self.color_cell = [BLUE, GREEN, RED, BROWN]
 
     def printf(self):
         """This method is drawing field on screen"""
         for i in range(0, 10):
             for j in range(0, 10):
-                if self.player.data[i][j] == 0:
-                    self.x_cell = self.x + j * CELL
-                    self.y_cell = self.y + i * CELL
-                    pygame.draw.rect(win, BLUE, (self.x_cell, self.y_cell , CELL, CELL))
+                self.x_cell = self.x + j * CELL
+                self.y_cell = self.y + i * CELL
+                pygame.draw.rect(win, self.color_cell[self.player.data[i][j]], (self.x_cell + 1, self.y_cell + 1, CELL - 0.5, CELL- 0.5))
 
         """pygame.draw.rect(win, YELLOW, (self.x, self.y, TARGET_STEP, TARGET_STEP))"""
 
         for i in range(self.x, self.x + self.length + TARGET_STEP, TARGET_STEP):
-            pygame.draw.line(win, YELLOW, [i, self.y], [i, self.y + self.length], 1)
+            pygame.draw.line(win, YELLOW_LINES, [i, self.y], [i, self.y + self.length], 1)
         for i in range(self.y, self.y + self.length + TARGET_STEP, TARGET_STEP):
-            pygame.draw.line(win, YELLOW, [self.x, i], [self.x + self.length, i], 1)
+            pygame.draw.line(win, YELLOW_LINES, [self.x, i], [self.x + self.length, i], 1)
+
 
         font = pygame.font.SysFont('arial', 22 * SIZE_FACTOR, False, False)
+
         self.serif = font.render('A B C D F G J K L M', True, YELLOW, BLACK)
         self.pos = self.serif.get_rect(center=(self.length // 2 + self.x, self.y - CELL // 1.5))
         win.blit(self.serif, self.pos)
@@ -65,15 +70,15 @@ class Player():
     def __init__(self):
         self.status = True
         self.deck_alive = 20
-        self.data = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        self.data = [[0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+                     [0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+                     [0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
                      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                     [0, 0, 0, 0, 0, 0, 3, 3, 3, 0],
                      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                     [0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
+                     [0, 0, 0, 2, 0, 0, 0, 0, 0, 0],
+                     [0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
                      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
         self.map = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
