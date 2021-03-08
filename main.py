@@ -16,7 +16,7 @@ TARGET_COORD = [1, 1]
 
 class Field():
     """Class Field"""
-    def __init__(self, player_id, x, y):
+    def __init__(self, player, x, y):
         """initializing attributes:
         player_id - whose player is field,
         start_coord - from which point it will drawn
@@ -24,16 +24,26 @@ class Field():
         self.length = CELL * 10
         self.x = x
         self.y = y
+        self.player = player
         self.serif = None
         self.serif2 = None
         self.pos = None
         self.pos2 = None
         self.digits = ('1', '2', '3', '4', '5', '6', '7', '8', '9', '10')
+        self.x_cell = None
+        self.y_cell = None
+
 
     def printf(self):
         """This method is drawing field on screen"""
-        pygame.draw.rect(win, BLUE, (self.x, self.y, self.length, self.length))
-        pygame.draw.rect(win, YELLOW, (self.x, self.y, TARGET_STEP, TARGET_STEP))
+        for i in range(0, 10):
+            for j in range(0, 10):
+                if self.player.data[i][j] == 0:
+                    self.x_cell = self.x + j * CELL
+                    self.y_cell = self.y + i * CELL
+                    pygame.draw.rect(win, BLUE, (self.x_cell, self.y_cell , CELL, CELL))
+
+        """pygame.draw.rect(win, YELLOW, (self.x, self.y, TARGET_STEP, TARGET_STEP))"""
 
         for i in range(self.x, self.x + self.length + TARGET_STEP, TARGET_STEP):
             pygame.draw.line(win, YELLOW, [i, self.y], [i, self.y + self.length], 1)
@@ -155,8 +165,9 @@ pygame.init()
 win = pygame.display.set_mode((WIN_SIZE_X, WIN_SIZE_Y))
 pygame.display.set_caption("THE BATTLESHIP")
 
-field1 = Field(1, X, Y)
-field2 = Field(2, X + 14 * CELL, Y)
+john = Player()
+field1 = Field(john, 100, 100)
+
 
 
 run = True
@@ -176,8 +187,8 @@ while run:
         TARGET_COORD[1] += 1
     elif keys[pygame.K_UP] and TARGET_COORD[1] > 0:
         TARGET_COORD[1] -= 1
+
     field1.printf()
-    field2.printf()
     """win.fill((0, 0, 0))"""
 
     """win.blit(text1, pos)"""
