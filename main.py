@@ -71,10 +71,26 @@ class Player(object):
                     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
-        self.ships = None
+        self.fleet = []
 
-        def ships_init():
-            pass
+        for i in range(10):
+            if i == 0:
+                self.ship = Ship(4, 0, 0, 0)
+                self.fleet.append(self.ship)
+            elif i == 1 or i == 2:
+                self.ship = Ship(3, 0, 0, 0)
+                self.fleet.append(self.ship)
+            elif 2 < i < 6:
+                self.ship = Ship(2, 0, 0, 0)
+                self.fleet.append(self.ship)
+            else:
+                self.ship = Ship(1, 0, 0, 0)
+                self.fleet.append(self.ship)
+
+
+    def ships_init(self):
+
+
 
         def place_ships():
             pass
@@ -187,8 +203,12 @@ john = Player()
 pc = Enemy()
 field1 = Field(john, CELL * 4, CELL * 4)
 field2 = Field(pc, CELL * 20, CELL * 4)
+john.ships_init()
 
-avram = Ship(4, 2, 2, 0)
+for i in range(10):
+    print(john.fleet[i].count_deck)
+
+
 
 
 run = True
@@ -202,8 +222,6 @@ while run:
     field1.printf()
     field2.printf()
     field2.target()
-    avram.fill_coord()
-    print(avram.decks_coord[0], avram.decks_coord[1], avram.decks_coord[2], avram.decks_coord[3])
     pygame.display.update()
     win.fill((0, 0, 0))
 
